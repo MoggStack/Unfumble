@@ -1,0 +1,182 @@
+# UnFumble
+
+AI-powered profile photo generator — turn any uploaded photo into the right image for the job: passport photos, LinkedIn headshots, Instagram-ready pictures, job application photos, and more.
+
+Built as a learning project by two developers exploring AI from two different ecosystems — **Java/Spring Boot** and **Python/FastAPI** — working together on one product.
+
+---
+
+## What It Does
+
+1. User uploads one or more photos and picks a use-case (passport, LinkedIn, Instagram, etc.)
+2. If multiple photos are uploaded, the system picks the best one using a vision-capable AI model
+3. The selected photo + use-case is sent for AI-powered image editing (background, crop, lighting, style — tailored to the use-case)
+4. The finished photo is stored and served back to the user
+
+---
+
+## Architecture
+
+```
+React Frontend
+      │
+      ▼
+Java Spring Boot Gateway  (:8080)
+  - Auth & user management
+  - Upload validation
+  - Job tracking (PENDING → PROCESSING → DONE)
+  - Multi-photo ranking (Spring AI + vision model)
+  - Calls the Python AI Engine
+      │
+      ▼
+Python FastAPI AI Engine  (:8001)
+  - Use-case-specific prompt building
+  - Image-editing AI API call
+  - Async processing via Celery
+  - Stores result in object storage
+      │
+      ▼
+   MinIO (S3-compatible) · Postgres · Redis
+```
+
+**Java owns:** orchestration, users, jobs, and pre-processing intelligence (ranking photos before they're processed).
+**Python owns:** the image-editing AI integration, prompt engineering per use-case, and async task processing.
+
+Full request flow, contracts, and decision history are in [`docs/`](./docs).
+
+---
+
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Gateway | Java 21, Spring Boot 3.3.x, Spring AI, Spring Security, Spring Data JPA |
+| AI Engine | Python 3.12, FastAPI, Celery, Pydantic v2 |
+| Frontend | React (placeholder — coming soon) |
+| Database | PostgreSQL |
+| Queue / Broker | Redis |
+| Object Storage | MinIO (local, S3-compatible) |
+| AI | Vision model for ranking (Java) · Image-editing model for generation (Python) |
+
+Everything runs locally and free during development — no paid infrastructure required.
+
+---
+
+## Project Structure
+
+```
+headshot/
+├── services/
+│   ├── gateway/        # Java Spring Boot — orchestration, auth, jobs
+│   ├── ai-engine/       # Python FastAPI — image editing AI, Celery workers
+│   └── frontend/        # React app (placeholder)
+├── infra/
+│   └── docker-compose.yml   # postgres, redis, minio
+├── docs/
+│   └── contracts/       # shared API contracts between gateway and ai-engine
+└── .github/workflows/    # CI for both services
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Docker & Docker Compose
+- Java 21 + Maven
+- Python 3.12 + [uv](https://docs.astral.sh/uv/)
+- Node.js (for the frontend, once it's built out)
+
+### 1. Clone and start infrastructure
+
+```bash
+git clone https://github.com/HeadshotAI/headshot.git
+cd headshot
+cd infra && docker compose up -d && cd ..
+```
+
+This starts Postgres (`:5432`), Redis (`:6379`), and MinIO (`:9000`, console at `:9001`).
+
+### 2. Run the AI Engine (Python)
+
+```bash
+cd services/ai-engine
+cp .env.example .env
+uv venv && source .venv/bin/activate
+uv pip install -e .
+uvicorn app.main:app --reload --port 8001
+```
+
+Check it's alive: `curl http://localhost:8001/api/v1/health`
+
+### 3. Run the Gateway (Java)
+
+```bash
+cd services/gateway
+./mvnw spring-boot:run
+```
+
+Check it's alive: `curl http://localhost:8080/health`
+
+### 4. Create the MinIO bucket
+
+Open `http://localhost:9001` (login: `minioadmin` / `minioadmin`) and create a bucket named `headshot-images`, or via CLI:
+
+```bash
+docker run --rm --network host minio/mc \
+  alias set local http://localhost:9000 minioadmin minioadmin && \
+  mc mb local/headshot-images
+```
+
+---
+
+## Environment Variables
+
+Each service has its own `.env.example` — copy it to `.env` and fill in:
+
+- `OPENAI_API_KEY` / image-model API key — needed for AI ranking and image editing
+- Database, Redis, and MinIO credentials default to the local Docker Compose values
+
+Never commit `.env` files — only `.env.example`.
+
+---
+
+## Contributing (Team Workflow)
+
+This is a two-person project with a clean ownership split:
+
+- **Java dev** → commits only inside `services/gateway/`
+- **Python dev** → commits only inside `services/ai-engine/`
+- Shared files (`infra/`, `docs/contracts/`) require both people to review
+
+**Branching:**
+
+```
+main                ← protected, always deployable
+  feat/java/...     ← Java feature branches
+  feat/python/...   ← Python feature branches
+```
+
+Workflow: branch from `main` → commit → push → open a PR → 1 approval required → merge.
+
+No direct pushes to `main`.
+
+---
+
+## Roadmap
+
+- [ ] Auth (signup/login)
+- [ ] Photo upload + multi-photo ranking
+- [ ] Use-case selection (passport, LinkedIn, Instagram, job application)
+- [ ] Image-editing AI integration
+- [ ] Async job processing with Celery
+- [ ] Job status polling
+- [ ] React frontend
+- [ ] Deployment
+
+---
+
+## License
+
+TBD
