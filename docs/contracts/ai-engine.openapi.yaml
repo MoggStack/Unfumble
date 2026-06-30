@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: UnFumble AI Engine API
+  version: 0.1.0-draft
+  description: >
+    Contract between the Java gateway and the Python AI engine.
+    DRAFT — reflects what each side has actually built as of 2026-06-30.
+    Open questions are marked inline; needs sign-off from both Java and Python
+    devs before either side builds against it.
+
+servers:
+  - url: http://localhost:8001/api/v1
+    description: AI engine, local dev
+
+paths:
+  /jobs:
+    post:
+      summary: Start processing a job (called by the gateway)
+      description: >
+        OPEN QUESTION: should the gateway create the job ID and pass it in,
+        or should the AI engine generate its own ID? Job.java already
+        generates a UUID when the upload happens, so the AI engine should
+        probably accept that ID rather than minting a new one — otherwise
+        there are two IDs for the same job.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [job_id, input_image_key, use_case]
+              properties:
+                job_id:
+                  type: string
+                  format: uuid
+                  description: The Job.id already created by the gateway.
+                input_image_key:
+                  type: string
+                  description: >
+                    MinIO object key (not a URL) — both services share the
+                    same bucket, per StorageService.java / storage.py.
+                  example: uploads/550e8400-e29b-photo.jpg
+                use_case:
+                  type: string
+                  enum: [PASSPORT, LINKEDIN, INSTAGRAM, JOB_APPLICATION]
+                  description: Must match Job.UseCase casing exactly (uppercase).
+                style_description:
+                  type: string
+                  description: >
+                    OPEN QUESTION: StyleAdvisorService.java already builds a
+                    style description per use-case in Java. Does the AI engine
+                    use this text directly in its prompt, or does it still own
+                    final prompt engineering and just use this as extra
+                    context? Currently app/services/prompt.py independently
+                    hardcodes its own per-use-case text, which would duplicate
+                    or conflict with this.
+      responses:
+        "202":
+          description: >
+            Accepted — processing started asynchronously. The AI engine
+            reports completion via the callback below, it does not return
+            the result synchronously.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [PROCESSING]
+
+  /jobs/{job_id}/callback:
+    put:
+      summary: Report job completion (called by the AI engine, into the gateway)
+      description: >
+        OPEN QUESTION: this endpoint does not exist yet on the gateway —
+        JobController.java currently only has GET /jobs/{id}. JobService.java's
+        updateStatus()/markDone() methods exist and could back this, but the
+        HTTP endpoint itself needs to be added on the Java side.
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [DONE, FAILED]
+                output_image_key:
+                  type: string
+                  description: MinIO object key for the result. Required if status=DONE.
+      responses:
+        "200":
+          description: Acknowledged.
+
+  /health:
+    get:
+      summary: Liveness check
+      responses:
+        "200":
+          description: OK
