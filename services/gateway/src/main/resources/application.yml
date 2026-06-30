@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: unfumble-gateway
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:headshot}
+    username: ${DB_USER:headshot}
+    password: ${DB_PASSWORD:headshot123}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update          # switch to 'validate' once schema is stable
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:PLACEHOLDER}
+      # Vision model used for multi-photo ranking
+      chat:
+        options:
+          model: gpt-4o
+
+# ── Application-level properties ─────────────────────────────────────────────
+
+app:
+  ai-engine:
+    base-url: ${AI_ENGINE_URL:http://localhost:8001}
+
+  minio:
+    endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+    access-key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${MINIO_SECRET_KEY:minioadmin}
+    bucket: ${MINIO_BUCKET:headshot-images}
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+
+logging:
+  level:
+    com.headshot.gateway: DEBUG
+    org.springframework.security: INFO
