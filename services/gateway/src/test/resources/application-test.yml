@@ -1,0 +1,29 @@
+# Test profile — overrides that let the context load without real infrastructure.
+# Used by GatewayApplicationTests.
+
+spring:
+  datasource:
+    # H2 in-memory DB for context-load tests.
+    # Add Testcontainers in a future step for real integration tests.
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  ai:
+    openai:
+      api-key: test-key   # Spring AI will not make real calls during context load
+
+app:
+  minio:
+    endpoint: http://localhost:9000
+    access-key: minioadmin
+    secret-key: minioadmin
+    bucket: headshot-images
+  ai-engine:
+    base-url: http://localhost:8001
