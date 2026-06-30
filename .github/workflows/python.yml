@@ -1,0 +1,40 @@
+name: ai-engine
+
+on:
+  push:
+    branches: [main]
+    paths: ["services/ai-engine/**"]
+  pull_request:
+    paths: ["services/ai-engine/**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/ai-engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv venv && uv pip install -e ".[dev]"
+      - run: source .venv/bin/activate && pytest
+
+  build-and-push:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: services/ai-engine
+          push: true
+          tags: ghcr.io/${{ github.repository }}/ai-engine:latest
