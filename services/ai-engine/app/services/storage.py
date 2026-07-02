@@ -31,3 +31,12 @@ def presigned_url(key: str, expires_in: int = 3600) -> str:
         Params={"Bucket": get_settings().s3_bucket, "Key": key},
         ExpiresIn=expires_in,
     )
+
+
+def ensure_bucket() -> None:
+    bucket = get_settings().s3_bucket
+    client = _client()
+    try:
+        client.head_bucket(Bucket=bucket)
+    except client.exceptions.NoSuchBucket:
+        client.create_bucket(Bucket=bucket)
