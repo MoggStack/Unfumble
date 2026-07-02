@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import UseCaseCards from '../components/UseCaseCards.astro';
+import WhyUnfumble from '../components/WhyUnfumble.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="UnFumble — AI-Powered Profile Photo Generator"
+  description="Upload a photo, pick a use-case — AI handles the rest. Passport, LinkedIn, Instagram, job applications — done in seconds."
+>
+  <Navbar />
+  <main>
+    <Hero />
+    <HowItWorks />
+    <UseCaseCards />
+    <WhyUnfumble />
+  </main>
+  <Footer />
+</Base>

@@ -1,0 +1,229 @@
+---
+// Hero.astro — Three.js particle canvas + headline
+---
+
+<section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+
+  <!-- Three.js background canvas -->
+  <canvas id="hero-canvas" class="absolute inset-0 w-full h-full" style="z-index: 1;"></canvas>
+
+  <!-- Radial spotlight -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="z-index: 2; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(20,184,166,0.08) 0%, transparent 70%);"
+  ></div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center max-w-5xl mx-auto">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 border border-teal-500/30 bg-teal-500/10 text-teal-300 text-sm font-medium tracking-wide"
+         style="animation: fadeIn 0.8s ease forwards;">
+      <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+      AI-Powered · No skills required
+    </div>
+
+    <!-- Headline -->
+    <h1
+      class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-6"
+      style="animation: fadeUp 0.7s 0.2s ease both;"
+    >
+      Your photo,
+      <br />
+      <span class="gradient-text">perfected</span>
+      <br />
+      for every occasion
+    </h1>
+
+    <!-- Sub-headline -->
+    <p
+      class="text-lg sm:text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+      style="animation: fadeUp 0.7s 0.4s ease both;"
+    >
+      Upload a photo, pick a use-case — AI handles the rest.
+      <br class="hidden sm:block" />
+      Passport, LinkedIn, Instagram, job applications —
+      <span class="text-teal-400 font-medium">done in seconds.</span>
+    </p>
+
+    <!-- CTA -->
+    <div
+      class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+      style="animation: fadeUp 0.7s 0.6s ease both;"
+    >
+      <a
+        href="/app"
+        id="hero-cta"
+        class="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-105"
+        style="background: linear-gradient(135deg, #14b8a6, #0d9488); box-shadow: 0 0 30px rgba(20,184,166,0.4);"
+      >
+        <span class="relative z-10">Try it free</span>
+        <svg class="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+        <!-- shimmer -->
+        <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+      </a>
+
+      <a
+        href="#how-it-works"
+        class="inline-flex items-center gap-2 px-6 py-4 rounded-2xl font-medium text-slate-300 border border-slate-700 hover:border-teal-500/50 hover:text-teal-300 transition-all duration-300 hover:bg-teal-500/5"
+      >
+        See how it works
+        <svg class="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Social proof -->
+    <div class="mt-16 flex items-center justify-center gap-6 text-sm text-slate-500"
+         style="animation: fadeIn 1s 1s ease both; opacity: 0;">
+      <div class="flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        No account required
+      </div>
+      <div class="w-1 h-1 rounded-full bg-slate-600"></div>
+      <div class="flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        Instant results
+      </div>
+      <div class="w-1 h-1 rounded-full bg-slate-600"></div>
+      <div class="flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        HD downloads
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-slate-600"
+       style="animation: fadeIn 1.5s 1.2s ease both; opacity: 0;">
+    <span class="text-xs tracking-widest uppercase font-medium">Scroll</span>
+    <div class="w-px h-10 bg-gradient-to-b from-teal-500/50 to-transparent"></div>
+  </div>
+</section>
+
+<script>
+import * as THREE from 'three';
+
+const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
+
+// ── Floating particle field ──────────────────────────────────────────────────
+const COUNT = 1800;
+const positions = new Float32Array(COUNT * 3);
+const colors = new Float32Array(COUNT * 3);
+const sizes = new Float32Array(COUNT);
+
+const palette = [
+  new THREE.Color('#14b8a6'),
+  new THREE.Color('#818cf8'),
+  new THREE.Color('#5eead4'),
+  new THREE.Color('#e879f9'),
+  new THREE.Color('#0ea5e9'),
+];
+
+for (let i = 0; i < COUNT; i++) {
+  const i3 = i * 3;
+  positions[i3]     = (Math.random() - 0.5) * 24;
+  positions[i3 + 1] = (Math.random() - 0.5) * 16;
+  positions[i3 + 2] = (Math.random() - 0.5) * 12;
+
+  const c = palette[Math.floor(Math.random() * palette.length)];
+  colors[i3]     = c.r;
+  colors[i3 + 1] = c.g;
+  colors[i3 + 2] = c.b;
+
+  sizes[i] = Math.random() * 0.04 + 0.008;
+}
+
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+const mat = new THREE.PointsMaterial({
+  size: 0.04,
+  sizeAttenuation: true,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.85,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+
+const particles = new THREE.Points(geo, mat);
+scene.add(particles);
+
+// ── Glowing ring ─────────────────────────────────────────────────────────────
+const ringGeo = new THREE.TorusGeometry(2.8, 0.006, 16, 120);
+const ringMat = new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: 0.25 });
+const ring = new THREE.Mesh(ringGeo, ringMat);
+ring.rotation.x = Math.PI / 2.5;
+scene.add(ring);
+
+const ring2Geo = new THREE.TorusGeometry(4, 0.004, 16, 120);
+const ring2Mat = new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.15 });
+const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+ring2.rotation.x = Math.PI / 3;
+ring2.rotation.y = 0.5;
+scene.add(ring2);
+
+// ── Mouse parallax ───────────────────────────────────────────────────────────
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+// ── Resize ───────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── Animate ──────────────────────────────────────────────────────────────────
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.004;
+
+  particles.rotation.y = t * 0.06  + mouseX * 0.08;
+  particles.rotation.x = t * 0.03  + mouseY * 0.05;
+
+  ring.rotation.z  = t * 0.15;
+  ring2.rotation.z = -t * 0.08;
+
+  camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.04;
+  camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.04;
+  camera.lookAt(scene.position);
+
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+
+<style>
+  #hero-canvas {
+    pointer-events: none;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+</style>
