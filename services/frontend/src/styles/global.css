@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* ================================================================
+   UNFUMBLE — BLACK & WHITE EDITORIAL DESIGN SYSTEM
+   Playfair Display · DM Sans · Space Mono
+   ================================================================ */
+
+:root {
+  --black: #080808;
+  --white: #fafafa;
+  --dark-grey: #1a1a1a;
+  --mid-grey: #5a5a5a;
+  --light-grey: #a0a0a0;
+}
+
+/* ── Typography Resets ──────────────────────────────────── */
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Utility Classes ────────────────────────────────────── */
+.container { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+
+/* ── Typography Hierarchy ───────────────────────────────── */
+.heading-1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.heading-2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.heading-3 {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ── UI Elements ────────────────────────────────────────── */
+.btn-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.25rem;
+  background: var(--white);
+  color: var(--black);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 1px;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-solid:hover {
+  background: var(--black);
+  color: var(--white);
+  box-shadow: 0 0 0 1px var(--white);
+  gap: 1rem;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.25rem;
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.2);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 1px;
+  transition: all 0.3s;
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.badge-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid-grey);
+}
+
+/* ── Scroll Reveals ─────────────────────────────────────── */
+.reveal, .reveal-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.in, .reveal-up.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; }
+.d4 { transition-delay: 0.4s; }
+
+/* ── Kinetic Typography ─────────────────────────────────── */
+.split-inner {
+  display: inline-block;
+  transform: translateY(110%) rotate(4deg);
+  transform-origin: top left;
+  opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.8s ease;
+}
+
+/* ── Picture / Image Wipes ──────────────────────────────── */
+.img-reveal-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--black);
+}
+.img-reveal-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -1px; /* Cover completely */
+  background: var(--white);
+  transform-origin: bottom;
+  transition: transform 1s cubic-bezier(0.8, 0, 0.2, 1);
+  z-index: 10;
+}
+.img-reveal-wrap.in::after {
+  transform: scaleY(0);
+}
+.img-reveal-img {
+  transform: scale(1.4);
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, filter 0.8s ease;
+}
+.img-reveal-wrap.in .img-reveal-img {
+  transform: scale(1);
+}

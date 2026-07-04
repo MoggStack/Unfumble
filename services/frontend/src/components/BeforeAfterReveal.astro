@@ -1,0 +1,239 @@
+---
+// BeforeAfterReveal.astro — "Your camera roll → one profile"
+// Same source portrait, CSS-degraded four ways, so the input/output
+// comparison reads as the same person's real photos.
+const BASE = 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04';
+const inputs = [
+  { src: `${BASE}?w=400&h=500&fit=crop&q=40`,            file: 'IMG_2041.jpg', issue: 'TOO DARK',    style: 'filter:brightness(0.38) contrast(1.1);',              tilt: '-3deg' },
+  { src: `${BASE}?w=400&h=500&fit=crop&q=40`,            file: 'IMG_2044.jpg', issue: 'BLURRY',      style: 'filter:blur(2.5px) saturate(1.3);',                   tilt: '2deg'  },
+  { src: `${BASE}?w=400&h=500&fit=crop&q=40`,            file: 'IMG_2047.jpg', issue: 'BAD ANGLE',   style: 'filter:contrast(0.9) saturate(1.5);transform:scale(1.8) translate(28%, 14%);', tilt: '-2deg' },
+  { src: `${BASE}?w=400&h=500&fit=crop&q=40`,            file: 'IMG_2052.jpg', issue: 'BLOWN OUT',   style: 'filter:brightness(1.75) contrast(0.7);',              tilt: '3deg'  },
+];
+const output = `${BASE}?w=600&h=760&fit=crop&q=100`;
+---
+
+<section id="before-after" style="position:relative;background:#080808;border-top:1px solid rgba(255,255,255,0.06);padding:8rem 1.5rem;">
+  <div style="max-width:72rem;margin:0 auto;">
+
+    <!-- Header -->
+    <div class="reveal" style="text-align:center;margin-bottom:5rem;">
+      <p style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:#5a5a5a;margin-bottom:1.25rem;">Real Input · Real Output</p>
+      <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(2rem,4.5vw,3.6rem);font-weight:900;line-height:1.05;letter-spacing:-0.03em;color:#fafafa;">
+        <span style="font-family:'DM Sans',system-ui,sans-serif;font-weight:400;font-size:0.62em;letter-spacing:-0.04em;">The photos you have become</span>
+        <br/><em style="font-style:italic;font-weight:700;">the photo you need.</em>
+      </h2>
+    </div>
+
+    <!-- Demo: camera roll → process → profile -->
+    <div class="ba-grid">
+
+      <!-- 1. Camera roll of fumbled shots -->
+      <div class="reveal d1">
+        <p class="ba-zone-label">Your camera roll</p>
+        <div class="ba-inputs">
+          {inputs.map((p, i) => (
+            <div class="ba-thumb" style={`transform:rotate(${p.tilt});`}>
+              <div class="ba-thumb-img">
+                <img src={p.src} alt={`Unusable shot — ${p.issue.toLowerCase()}`} loading="lazy" style={p.style} />
+              </div>
+              <div class="ba-thumb-meta">
+                <span class="ba-file">{p.file}</span>
+                <span class="ba-issue">✕ {p.issue}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 2. Process token -->
+      <div class="reveal d2 ba-process">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="ba-mark">
+          <path d="M3 9V3h6" stroke="#fafafa" stroke-width="2.5"/>
+          <path d="M23 3h6v6" stroke="#fafafa" stroke-width="2.5"/>
+          <path d="M29 23v6h-6" stroke="#fafafa" stroke-width="2.5"/>
+          <path d="M9 29H3v-6" stroke="#fafafa" stroke-width="2.5"/>
+          <circle cx="16" cy="12.5" r="4.25" fill="#fafafa"/>
+          <path d="M8.5 25.5c0-4.4 3.4-6.9 7.5-6.9s7.5 2.5 7.5 6.9z" fill="#fafafa"/>
+        </svg>
+        <span class="ba-process-label">Unfumble</span>
+        <span class="ba-arrow">→</span>
+      </div>
+
+      <!-- 3. One clean profile -->
+      <div class="reveal d3">
+        <p class="ba-zone-label" style="text-align:right;">Your profile</p>
+        <div class="ba-out">
+          <div class="ba-out-img img-reveal-wrap reveal">
+            <img src={output} alt="Clean, studio-grade profile photo" class="img-reveal-img" loading="lazy" />
+            <span class="oc oc-tl"></span><span class="oc oc-tr"></span>
+            <span class="oc oc-bl"></span><span class="oc oc-br"></span>
+          </div>
+          <div class="ba-out-meta">
+            <span class="ba-file" style="color:#fafafa;">profile_final.jpg</span>
+            <span class="ba-ok">✓ STUDIO GRADE</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Caption -->
+    <p class="reveal d4" style="text-align:center;margin-top:4rem;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:#5a5a5a;">
+      Same person · Same phone · Four unusable shots in — one profile out
+    </p>
+
+  </div>
+</section>
+
+<style>
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1.15fr auto 1fr;
+    gap: 3.5rem;
+    align-items: start; /* zone labels line up across columns */
+  }
+  .ba-process { align-self: center; }
+
+  .ba-zone-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 1.25rem;
+  }
+
+  /* — Fumbled inputs — */
+  .ba-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .ba-thumb {
+    background: #101010;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 5px;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .ba-thumb:hover { transform: rotate(0deg) scale(1.03) !important; }
+  .ba-thumb-img {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #111;
+  }
+  .ba-thumb-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ba-thumb-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 7px 3px 3px;
+  }
+  .ba-file {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    color: #5a5a5a;
+  }
+  .ba-issue {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.1em;
+    color: #ff6060;
+    border: 1px solid rgba(255,80,80,0.25);
+    padding: 2px 5px;
+    white-space: nowrap;
+  }
+
+  /* — Process token — */
+  .ba-process {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 2rem;
+  }
+  .ba-mark { width: 44px; height: 44px; }
+  .ba-process-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .ba-arrow {
+    font-size: 1.75rem;
+    color: #fafafa;
+    line-height: 1;
+  }
+
+  /* — Clean output — */
+  .ba-out {
+    background: #101010;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 8px;
+    transition: border-color 0.4s;
+  }
+  .ba-out:hover { border-color: rgba(255,255,255,0.4); }
+  .ba-out-img {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #111;
+  }
+  .ba-out-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.06) brightness(0.98);
+    transition: transform 0.5s ease;
+  }
+  .ba-out:hover .ba-out-img img { transform: scale(1.02); }
+
+  /* focus-frame corners echoing the logo */
+  .oc {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    z-index: 6;
+    border: 0 solid #fafafa;
+  }
+  .oc-tl { top: 10px; left: 10px;   border-top-width: 2px; border-left-width: 2px; }
+  .oc-tr { top: 10px; right: 10px;  border-top-width: 2px; border-right-width: 2px; }
+  .oc-bl { bottom: 10px; left: 10px;  border-bottom-width: 2px; border-left-width: 2px; }
+  .oc-br { bottom: 10px; right: 10px; border-bottom-width: 2px; border-right-width: 2px; }
+
+  .ba-out-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 10px 4px 4px;
+  }
+  .ba-ok {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    color: #fafafa;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+
+  /* — Responsive: stack vertically, arrow points down — */
+  @media (max-width: 900px) {
+    .ba-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .ba-process { padding-top: 0; flex-direction: row; justify-content: center; }
+    .ba-arrow { transform: rotate(90deg); }
+    .ba-out { max-width: 340px; margin: 0 auto; }
+    .ba-zone-label, .ba-zone-label[style] { text-align: center !important; }
+  }
+</style>

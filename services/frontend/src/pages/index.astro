@@ -4,20 +4,43 @@ import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import UseCaseCards from '../components/UseCaseCards.astro';
+import BeforeAfterReveal from '../components/BeforeAfterReveal.astro';
 import WhyUnfumble from '../components/WhyUnfumble.astro';
 import Footer from '../components/Footer.astro';
 ---
 
 <Base
-  title="UnFumble — AI-Powered Profile Photo Generator"
-  description="Upload a photo, pick a use-case — AI handles the rest. Passport, LinkedIn, Instagram, job applications — done in seconds."
+  title="UnFumble — Turn Your Worst Photos into One Perfect Profile Picture"
+  description="Side angles, blurry selfies, bad lighting — upload them all. UnFumble's AI builds one clean, professional profile photo from your worst shots, in seconds."
 >
   <Navbar />
   <main>
     <Hero />
-    <HowItWorks />
-    <UseCaseCards />
-    <WhyUnfumble />
+    <!-- Sections below: hidden initially so first impression is pure fumble chaos -->
+    <div id="below-hero" style="opacity:0;transition:opacity 1s ease;">
+      <HowItWorks />
+      <BeforeAfterReveal />
+      <UseCaseCards />
+      <WhyUnfumble />
+    </div>
   </main>
   <Footer />
 </Base>
+
+<script is:inline>
+  // Reveal sections below hero after the unfumble completes (~3.5s),
+  // or immediately if the user scrolls/navigates first — never show black sections.
+  (() => {
+    let shown = false;
+    const show = () => {
+      if (shown) return;
+      shown = true;
+      const el = document.getElementById('below-hero');
+      if (el) el.style.opacity = '1';
+    };
+    setTimeout(show, 3500);
+    window.addEventListener('scroll', show, { once: true, passive: true });
+    window.addEventListener('wheel', show, { once: true, passive: true });
+    window.addEventListener('touchmove', show, { once: true, passive: true });
+  })();
+</script>

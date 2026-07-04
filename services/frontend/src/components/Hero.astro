@@ -1,229 +1,732 @@
 ---
-// Hero.astro — Three.js particle canvas + headline
+// Hero.astro — FUMBLE CHAOS → B&W EDITORIAL REVEAL
 ---
 
-<section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+<section id="hero">
 
-  <!-- Three.js background canvas -->
-  <canvas id="hero-canvas" class="absolute inset-0 w-full h-full" style="z-index: 1;"></canvas>
+  <!-- ── Overlays (fumbled only) ─────────────────────────── -->
+  <div id="scan-lines"></div>
+  <div id="glitch-r"></div>
+  <div id="glitch-b"></div>
+  <div id="bad-vignette"></div>
 
-  <!-- Radial spotlight -->
-  <div
-    class="absolute inset-0 pointer-events-none"
-    style="z-index: 2; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(20,184,166,0.08) 0%, transparent 70%);"
-  ></div>
-
-  <!-- Content -->
-  <div class="relative z-10 text-center max-w-5xl mx-auto">
-    <!-- Badge -->
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 border border-teal-500/30 bg-teal-500/10 text-teal-300 text-sm font-medium tracking-wide"
-         style="animation: fadeIn 0.8s ease forwards;">
-      <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-      AI-Powered · No skills required
+  <!-- ── Input Photos (Fumbled) ─────────────────────────────── -->
+  <div class="fcard" id="fcard-1">
+    <div class="fcard-inner">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80" alt="Bad lighting" class="bad-photo" />
+      <div class="fcard-meta"><span class="fcard-label">B4D L!GHT!NG</span></div>
+      <div class="corrupt-badge">LOW EXPOSURE</div>
     </div>
+  </div>
 
-    <!-- Headline -->
-    <h1
-      class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-6"
-      style="animation: fadeUp 0.7s 0.2s ease both;"
-    >
-      Your photo,
-      <br />
-      <span class="gradient-text">perfected</span>
-      <br />
-      for every occasion
+  <div class="fcard" id="fcard-2">
+    <div class="fcard-inner">
+      <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80" alt="Blurry Selfie" class="bad-photo" />
+      <div class="fcard-meta"><span class="fcard-label">BLURRY</span></div>
+      <div class="corrupt-badge">DISTORTED</div>
+    </div>
+  </div>
+
+  <div class="fcard" id="fcard-3">
+    <div class="fcard-inner">
+      <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&q=80" alt="Side Angle" class="bad-photo" />
+      <div class="fcard-meta"><span class="fcard-label">S!D€ 4NGL€</span></div>
+      <div class="corrupt-badge">REJECTED</div>
+    </div>
+  </div>
+
+  <!-- ── Center Content ──────────────────────────────────── -->
+  <div id="hero-center">
+
+    <h1 id="hero-h1">
+      <span id="hl-1" class="scramble-target" style="font-family:'DM Sans',system-ui,sans-serif;font-weight:400;font-size:0.6em;letter-spacing:-0.05em;" data-final="Your fumbled photos,">Y0Ur fUmBl€d pH0t05,</span>
+      <br/>
+      <span id="hl-2" class="scramble-target hero-emphasis" data-final="unfumbled">uNfUmBl€d</span>
+      <br/>
+      <span id="hl-3" class="scramble-target" style="font-family:'Space Mono',monospace;font-weight:400;font-size:0.25em;letter-spacing:0.1em;text-transform:uppercase;" data-final="into one perfect profile.">!nt0 0n€ p€rf€cT pr0f!l€.</span>
     </h1>
 
-    <!-- Sub-headline -->
-    <p
-      class="text-lg sm:text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
-      style="animation: fadeUp 0.7s 0.4s ease both;"
-    >
-      Upload a photo, pick a use-case — AI handles the rest.
-      <br class="hidden sm:block" />
-      Passport, LinkedIn, Instagram, job applications —
-      <span class="text-teal-400 font-medium">done in seconds.</span>
+    <p id="hero-sub">
+      <span class="scramble-target" data-final="Side angles, blurry selfies, bad lighting — upload them all. AI builds the profile photo you actually deserve.">S!d€ 4ngl€s, blUrRy s€lf!€s, b4d l!ght!ng — upl04d th€m 4ll. 4! bu!lds th€ pr0f!l€ ph0t0 y0u 4ctu4lly d€s€rv€.</span>
     </p>
 
-    <!-- CTA -->
-    <div
-      class="flex flex-col sm:flex-row gap-4 justify-center items-center"
-      style="animation: fadeUp 0.7s 0.6s ease both;"
-    >
-      <a
-        href="/app"
-        id="hero-cta"
-        class="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-105"
-        style="background: linear-gradient(135deg, #14b8a6, #0d9488); box-shadow: 0 0 30px rgba(20,184,166,0.4);"
-      >
-        <span class="relative z-10">Try it free</span>
-        <svg class="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-        </svg>
-        <!-- shimmer -->
-        <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-      </a>
-
-      <a
-        href="#how-it-works"
-        class="inline-flex items-center gap-2 px-6 py-4 rounded-2xl font-medium text-slate-300 border border-slate-700 hover:border-teal-500/50 hover:text-teal-300 transition-all duration-300 hover:bg-teal-500/5"
-      >
-        See how it works
-        <svg class="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+    <div id="hero-actions">
+      <a href="#how-it-works" id="hero-secondary">
+        <span class="scramble-target" data-final="See how it works">H0w d0€s !t w0rK?</span>
       </a>
     </div>
 
-    <!-- Social proof -->
-    <div class="mt-16 flex items-center justify-center gap-6 text-sm text-slate-500"
-         style="animation: fadeIn 1s 1s ease both; opacity: 0;">
-      <div class="flex items-center gap-1.5">
-        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        No account required
+    <!-- ── Output: The Perfect 4K Portrait (revealed on scroll) ──────────── -->
+    <div id="perfect-portrait">
+      <div class="pp-inner">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1600&q=100" alt="Perfect 4K Portrait" class="pp-img" />
+        <div class="pp-overlay"></div>
       </div>
-      <div class="w-1 h-1 rounded-full bg-slate-600"></div>
-      <div class="flex items-center gap-1.5">
-        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        Instant results
+      <div class="pp-meta">
+        <span class="pp-label">Editorial Grade</span>
+        <span class="pp-badge">✓ 4K RESOLUTION</span>
       </div>
-      <div class="w-1 h-1 rounded-full bg-slate-600"></div>
-      <div class="flex items-center gap-1.5">
-        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        HD downloads
+    </div>
+
+  </div>
+
+  <!-- ── Geometric Grid System (Loading Phase) ──────────── -->
+  <div id="grid-system">
+    <div class="grid-line-h gl-1"></div>
+    <div class="grid-line-h gl-2"></div>
+    <div class="grid-line-v gl-3"></div>
+    <div class="grid-line-v gl-4"></div>
+    <div class="scan-laser-v"></div>
+    <div class="scan-laser-h"></div>
+    <div class="crosshairs ch-1"></div>
+    <div class="crosshairs ch-2"></div>
+  </div>
+
+  <!-- ── Processing HUD ──────────── -->
+  <div id="proc-wrap">
+    <div style="display:flex;align-items:center;gap:1.5rem;font-family:'Space Mono',monospace;color:#fafafa;padding:0.5rem 1.5rem;background:rgba(8,8,8,0.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);">
+      <div style="display:flex;align-items:center;gap:0.75rem;font-size:1.1rem;">
+        <span style="color:rgba(255,255,255,0.3)">[</span>
+        <span id="proc-pct">000</span>
+        <span style="color:rgba(255,255,255,0.3)">]</span>
       </div>
+      <div style="width:1px;height:1.2rem;background:rgba(255,255,255,0.15)"></div>
+      <span id="proc-step" style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#888;">CALIBRATING</span>
     </div>
   </div>
 
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-slate-600"
-       style="animation: fadeIn 1.5s 1.2s ease both; opacity: 0;">
-    <span class="text-xs tracking-widest uppercase font-medium">Scroll</span>
-    <div class="w-px h-10 bg-gradient-to-b from-teal-500/50 to-transparent"></div>
+  <!-- ── Scroll Cue ─────────────────────────────────────── -->
+  <div id="scroll-cue">
+    <span>SCROLL</span>
+    <div id="scroll-line"></div>
   </div>
+
 </section>
 
-<script>
-import * as THREE from 'three';
-
-const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x000000, 0);
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 5;
-
-// ── Floating particle field ──────────────────────────────────────────────────
-const COUNT = 1800;
-const positions = new Float32Array(COUNT * 3);
-const colors = new Float32Array(COUNT * 3);
-const sizes = new Float32Array(COUNT);
-
-const palette = [
-  new THREE.Color('#14b8a6'),
-  new THREE.Color('#818cf8'),
-  new THREE.Color('#5eead4'),
-  new THREE.Color('#e879f9'),
-  new THREE.Color('#0ea5e9'),
-];
-
-for (let i = 0; i < COUNT; i++) {
-  const i3 = i * 3;
-  positions[i3]     = (Math.random() - 0.5) * 24;
-  positions[i3 + 1] = (Math.random() - 0.5) * 16;
-  positions[i3 + 2] = (Math.random() - 0.5) * 12;
-
-  const c = palette[Math.floor(Math.random() * palette.length)];
-  colors[i3]     = c.r;
-  colors[i3 + 1] = c.g;
-  colors[i3 + 2] = c.b;
-
-  sizes[i] = Math.random() * 0.04 + 0.008;
-}
-
-const geo = new THREE.BufferGeometry();
-geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-const mat = new THREE.PointsMaterial({
-  size: 0.04,
-  sizeAttenuation: true,
-  vertexColors: true,
-  transparent: true,
-  opacity: 0.85,
-  depthWrite: false,
-  blending: THREE.AdditiveBlending,
-});
-
-const particles = new THREE.Points(geo, mat);
-scene.add(particles);
-
-// ── Glowing ring ─────────────────────────────────────────────────────────────
-const ringGeo = new THREE.TorusGeometry(2.8, 0.006, 16, 120);
-const ringMat = new THREE.MeshBasicMaterial({ color: 0x14b8a6, transparent: true, opacity: 0.25 });
-const ring = new THREE.Mesh(ringGeo, ringMat);
-ring.rotation.x = Math.PI / 2.5;
-scene.add(ring);
-
-const ring2Geo = new THREE.TorusGeometry(4, 0.004, 16, 120);
-const ring2Mat = new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.15 });
-const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
-ring2.rotation.x = Math.PI / 3;
-ring2.rotation.y = 0.5;
-scene.add(ring2);
-
-// ── Mouse parallax ───────────────────────────────────────────────────────────
-let mouseX = 0, mouseY = 0;
-document.addEventListener('mousemove', (e) => {
-  mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
-  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-// ── Resize ───────────────────────────────────────────────────────────────────
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-// ── Animate ──────────────────────────────────────────────────────────────────
-let t = 0;
-function animate() {
-  requestAnimationFrame(animate);
-  t += 0.004;
-
-  particles.rotation.y = t * 0.06  + mouseX * 0.08;
-  particles.rotation.x = t * 0.03  + mouseY * 0.05;
-
-  ring.rotation.z  = t * 0.15;
-  ring2.rotation.z = -t * 0.08;
-
-  camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.04;
-  camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.04;
-  camera.lookAt(scene.position);
-
-  renderer.render(scene, camera);
-}
-
-animate();
-</script>
 
 <style>
-  #hero-canvas {
-    pointer-events: none;
-  }
+/* ── Section ────────────────────────────────────────────── */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* reserve room for navbar (top) and the clean-cards strip (bottom)
+     so the centered content can never collide with them */
+  padding-top: 80px;
+  padding-bottom: 300px;
+}
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* ── Scan lines ─────────────────────────────────────────── */
+#scan-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,0.2) 3px, rgba(0,0,0,0.2) 4px
+  );
+  animation: scanScroll 0.08s steps(1) infinite;
+  opacity: 1;
+  transition: opacity 1.2s ease 0.3s;
+}
+#hero.done #scan-lines { opacity: 0; }
+@keyframes scanScroll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+/* ── Chromatic aberration ───────────────────────────────── */
+#glitch-r, #glitch-b {
+  position: absolute; inset: 0; z-index: 89; pointer-events: none;
+  transition: opacity 1s ease 0.2s;
+}
+#glitch-r {
+  background: rgba(255,20,60,0.05);
+  transform: translateX(-4px);
+  mix-blend-mode: screen;
+  animation: glitchR 0.13s steps(1) infinite;
+}
+#glitch-b {
+  background: rgba(0,200,255,0.05);
+  transform: translateX(4px);
+  mix-blend-mode: screen;
+  animation: glitchB 0.09s steps(1) infinite;
+}
+#hero.done #glitch-r,
+#hero.done #glitch-b { opacity: 0; animation: none; }
+
+@keyframes glitchR {
+  0%,94%,100% { transform: translateX(-4px); }
+  95% { transform: translateX(-12px) skewX(2deg); }
+  97% { transform: translateX(6px); }
+}
+@keyframes glitchB {
+  0%,91%,100% { transform: translateX(4px); }
+  92% { transform: translateX(14px); }
+  94% { transform: translateX(-3px); }
+}
+
+/* ── Red vignette ───────────────────────────────────────── */
+#bad-vignette {
+  position: absolute; inset: 0; z-index: 88; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(100,0,0,0.3) 100%);
+  transition: opacity 1.4s ease 0.6s;
+}
+#hero.done #bad-vignette { opacity: 0; }
+
+/* ════════════════════════════════════════════════════════
+   FUMBLED CARDS
+════════════════════════════════════════════════════════ */
+.fcard {
+  position: absolute;
+  width: 170px;
+  z-index: 10;
+  transition: transform 1s cubic-bezier(0.8,0,0.2,1), opacity 0.7s ease, filter 0.8s ease;
+}
+#fcard-1 { top:3%; left:-2%;   transform:rotate(-18deg) scale(1.12); filter:blur(4px) brightness(0.7) contrast(1.5); animation:wobble1 .35s ease-in-out infinite alternate; }
+#fcard-2 { top:5%; right:-3%;  transform:rotate(14deg)  scale(0.93); filter:blur(6px) brightness(1.2) sepia(0.5);  animation:wobble2 .45s ease-in-out infinite alternate; }
+#fcard-3 { bottom:15%; left:6%; transform:rotate(9deg)  scale(1.08); filter:blur(3px) brightness(0.6) contrast(1.8) hue-rotate(-20deg); animation:wobble3 .4s ease-in-out infinite alternate; }
+
+@keyframes wobble1 { from{transform:rotate(-18deg) scale(1.12)} to{transform:rotate(-19.5deg) scale(1.12) translate(-3px,4px)} }
+@keyframes wobble2 { from{transform:rotate(14deg) scale(0.93)} to{transform:rotate(15.5deg) scale(0.93) translate(4px,-2px)} }
+@keyframes wobble3 { from{transform:rotate(9deg) scale(1.08)} to{transform:rotate(7.5deg) scale(1.08) translate(-2px,3px)} }
+
+/* 3D COLLAPSE ANIMATION - Triggered on Scroll */
+#hero.hero-collapse .fcard {
+  opacity: 0 !important;
+  filter: blur(20px) brightness(4) !important;
+  animation: none !important;
+  pointer-events: none;
+}
+#hero.hero-collapse #fcard-1 { transform: translate(35vw, 40vh) scale(0.2) rotate(45deg) !important; }
+#hero.hero-collapse #fcard-2 { transform: translate(-35vw, 40vh) scale(0.2) rotate(-45deg) !important; }
+#hero.hero-collapse #fcard-3 { transform: translate(25vw, -30vh) scale(0.2) rotate(15deg) !important; }
+
+/* Image UI */
+.fcard-inner {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255,50,50,0.6);
+  box-shadow: 0 0 16px rgba(200,0,0,0.35);
+  background: #111;
+}
+
+.bad-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+}
+
+@keyframes glitchBarAnim {
+  0%,60%,100% { top:45%;opacity:1; }
+  61% { top:20%;opacity:0.5;height:5px; }
+  80% { top:70%;opacity:0.8;height:18px; }
+}
+
+.corrupt-badge {
+  position:absolute;top:5px;left:5px;
+  font-family:'Space Mono',monospace;font-size:0.48rem;font-weight:700;
+  letter-spacing:0.1em;color:#ff4040;
+  background:rgba(0,0,0,0.85);border:1px solid rgba(255,40,40,0.6);
+  padding:2px 5px;border-radius:2px;z-index:20;
+  animation:badgeFlicker 1.5s ease-in-out infinite;
+}
+@keyframes badgeFlicker { 0%,89%,91%,100%{opacity:1} 90%{opacity:0} }
+
+.fcard-meta {
+  background:rgba(0,0,0,0.92);
+  padding:5px 8px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid rgba(255,40,40,0.2);
+}
+.fcard-label  { font-family:'Space Mono',monospace;font-size:0.56rem;font-weight:700;color:#ff6060;animation:labelFlicker 2s ease-in-out infinite; }
+.fcard-quality{ font-family:'Space Mono',monospace;font-size:0.54rem;color:#ff4040; }
+
+@keyframes labelFlicker { 0%,85%,100%{opacity:1} 86%{opacity:0.2} 92%{opacity:0.4} 94%{opacity:1} }
+
+
+/* ════════════════════════════════════════════════════════
+   CENTER HERO CONTENT
+════════════════════════════════════════════════════════ */
+#hero-center {
+  position: relative;
+  z-index: 30;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  max-width: 900px;
+  width: 100%;
+  /* Protective background to ensure text never overlaps jarringly with cards */
+  background: radial-gradient(ellipse at center, rgba(8,8,8,0.95) 20%, rgba(8,8,8,0.5) 50%, rgba(8,8,8,0) 75%);
+}
+
+/* Headline — Playfair Display, enormous */
+#hero-h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 9.5vw, 9rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: rgba(180,185,195,0.7);
+  margin-bottom: 0.75rem; /* Pulled much closer to subheadline */
+  filter: blur(1.5px);
+  text-shadow: -2px 0 rgba(255,0,80,0.3), 2px 0 rgba(0,255,255,0.3);
+  animation: headlineFlicker 3s ease-in-out infinite;
+  transition: color 0.9s ease 0.6s, filter 0.9s ease 0.6s, text-shadow 0.9s ease 0.6s;
+}
+#hero.done #hero-h1 {
+  color: #fafafa;
+  filter: none;
+  text-shadow: none;
+  animation: none;
+}
+@keyframes headlineFlicker {
+  0%,93%,100% { opacity:1; }
+  94% { opacity:0.45; transform:skewX(0.5deg); }
+  95% { opacity:1; }
+}
+
+/* "perfected" — italic for typographic emphasis, NOT a color gradient */
+.hero-emphasis {
+  font-style: italic;
+  font-weight: 700;
+  color: inherit;
+}
+
+/* Sub-headline */
+#hero-sub {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 300;
+  color: rgba(80,85,95,0.9);
+  max-width: 580px;
+  margin: 0 auto 1.5rem; /* Tighter bottom margin */
+  line-height: 1.7;
+  filter: blur(1px);
+  transition: color 0.8s ease 1s, filter 0.8s ease 1s;
+}
+#hero.done #hero-sub {
+  color: var(--light-grey);
+  filter: none;
+}
+
+/* Actions */
+#hero-actions {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* CTA — white fill / black text — STARK, editorial */
+#hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.25rem;
+  background: rgba(255,255,255,0.05);
+  color: #fafafa;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 1px;
+  animation: btnGlitch 0.45s steps(1) infinite;
+  filter: blur(0.4px);
+  transition: background 0.5s ease 1.3s, color 0.5s ease 1.3s, border-color 0.5s ease 1.3s, box-shadow 0.5s ease 1.3s, filter 0.5s ease 1.3s;
+}
+@keyframes btnGlitch {
+  0%,82%,100% { transform:none; }
+  83% { transform:translateX(-3px); }
+  85% { transform:translateX(3px); }
+  87% { transform:none; }
+}
+#hero.done #hero-cta {
+  background: #fafafa;
+  color: #080808;
+  border-color: #fafafa;
+  box-shadow: 0 4px 24px rgba(250,250,250,0.12), 0 1px 4px rgba(0,0,0,0.8);
+  filter: none;
+  animation: none;
+}
+#hero.done #hero-cta:hover {
+  background: #080808;
+  color: #fafafa;
+  box-shadow: 0 0 0 1px #fafafa;
+}
+
+/* Secondary link */
+#hero-secondary {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: rgba(60,65,75,0.9);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  filter: blur(0.4px);
+  transition: color 0.6s ease 1.5s, filter 0.6s ease 1.5s;
+  border-bottom: 1px solid transparent;
+}
+#hero.done #hero-secondary {
+  color: var(--mid-grey);
+  filter: none;
+}
+#hero.done #hero-secondary:hover {
+  color: var(--white);
+  border-bottom-color: var(--dark-grey);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   GEOMETRIC GRID SYSTEM
+════════════════════════════════════════════════════════ */
+#grid-system {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#grid-system.active { opacity: 1; }
+#hero.done #grid-system { opacity: 0; }
+
+.grid-line-h { position:absolute; left:0; width:100%; height:1px; background:rgba(255,255,255,0.15); transform:scaleX(0); transform-origin:left; }
+.grid-line-v { position:absolute; top:0; height:100%; width:1px; background:rgba(255,255,255,0.15); transform:scaleY(0); transform-origin:top; }
+
+.gl-1 { top: 30%; transition: transform 0.6s cubic-bezier(0.8,0,0.2,1); }
+.gl-2 { bottom: 30%; transition: transform 0.6s cubic-bezier(0.8,0,0.2,1) 0.1s; }
+.gl-3 { left: 25%; transition: transform 0.6s cubic-bezier(0.8,0,0.2,1) 0.2s; }
+.gl-4 { right: 25%; transition: transform 0.6s cubic-bezier(0.8,0,0.2,1) 0.3s; }
+
+#grid-system.active .grid-line-h { transform:scaleX(1); }
+#grid-system.active .grid-line-v { transform:scaleY(1); }
+
+.scan-laser-v {
+  position: absolute; top:0; bottom:0; left:0; width:1px;
+  background: linear-gradient(to bottom, transparent, #fafafa, transparent);
+  box-shadow: 0 0 10px #fafafa;
+  opacity: 0;
+}
+#grid-system.active .scan-laser-v {
+  animation: scanV 1.8s ease-in-out infinite alternate;
+}
+@keyframes scanV {
+  0% { left: 10%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 90%; opacity: 0; }
+}
+
+.scan-laser-h {
+  position: absolute; left:0; right:0; top:0; height:1px;
+  background: linear-gradient(to right, transparent, #fafafa, transparent);
+  box-shadow: 0 0 10px #fafafa;
+  opacity: 0;
+}
+#grid-system.active .scan-laser-h {
+  animation: scanH 2.2s ease-in-out infinite alternate;
+}
+@keyframes scanH {
+  0% { top: 15%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 85%; opacity: 0; }
+}
+
+/* Framing Crosshairs */
+.crosshairs {
+  position: absolute;
+  width: 140px; height: 180px;
+  border: 1px solid rgba(255,255,255,0.4);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.crosshairs::before, .crosshairs::after { content:''; position:absolute; background:#fafafa; }
+.crosshairs::before { width:6px; height:1px; top:-1px; left:-1px; box-shadow: 139px 0 0 #fafafa, 0 181px 0 #fafafa, 139px 181px 0 #fafafa; }
+.crosshairs::after { width:1px; height:6px; top:-1px; left:-1px; box-shadow: 141px 0 0 #fafafa, 0 175px 0 #fafafa, 141px 175px 0 #fafafa; }
+
+.ch-1 { top: 10%; left: 10%; transform: scale(1.5); }
+.ch-2 { bottom: 15%; right: 10%; transform: scale(1.5); }
+#grid-system.active .ch-1 { opacity:1; top:3%; left:-2%; transform:scale(1.2); }
+#grid-system.active .ch-2 { opacity:1; bottom:5%; right:0%; transform:scale(0.9); }
+
+
+/* ════════════════════════════════════════════════════════
+   PROCESSING HUD
+════════════════════════════════════════════════════════ */
+#proc-wrap {
+  position: absolute;
+  bottom: 11%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#proc-wrap.active { opacity: 1; }
+
+/* Removed old HUD CSS. New UI uses inline styles for the minimal B&W loader */
+#proc-pct {
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   THE PERFECT PORTRAIT (Many-to-One output)
+════════════════════════════════════════════════════════ */
+#perfect-portrait {
+  position: relative;
+  margin: 3rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.pp-inner {
+  width: 260px;
+  height: 340px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 2px;
+  background: #080808;
+  padding: 8px;
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  filter: blur(12px);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1), filter 1s ease;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+#perfect-portrait.revealed .pp-inner { opacity:1; transform:none; filter:none; }
+
+.pp-inner:hover {
+  border-color: rgba(255,255,255,0.6);
+  transform: translateY(-5px);
+}
+
+.pp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.15) brightness(0.95);
+  transition: filter 0.6s ease;
+}
+.pp-inner:hover .pp-img {
+  filter: grayscale(0%) contrast(1.05) brightness(1.05);
+}
+
+.pp-overlay {
+  position: absolute;
+  inset: 8px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+
+.pp-meta {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+}
+#perfect-portrait.revealed .pp-meta {
+  opacity: 1;
+  transform: none;
+}
+.pp-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fafafa;
+  letter-spacing: 0.05em;
+}
+.pp-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--mid-grey);
+  letter-spacing: 0.2em;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SCROLL CUE
+════════════════════════════════════════════════════════ */
+#scroll-cue {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.5s;
+}
+#hero.done #scroll-cue { opacity: 1; }
+#scroll-cue span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: var(--dark-grey);
+}
+#scroll-line {
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE (HEIGHT & WIDTH)
+════════════════════════════════════════════════════════ */
+@media (max-height: 850px) {
+  #hero { padding-bottom: 300px; }
+  #hero-h1 { font-size: clamp(2.6rem, 8vw, 7rem); }
+  .pp-inner { width: 220px; height: 290px; }
+}
+@media (max-height: 700px) {
+  #hero { padding-bottom: 280px; }
+  .pp-inner { width: 190px; height: 250px; }
+  #hero-h1 { margin-bottom: 0.25rem; }
+  #hero-sub { margin-bottom: 1rem; }
+}
+
+@media (max-width: 768px) {
+  #hero { padding-bottom: 300px; }
+  #fcard-1 { width:130px; left:-5%; }
+  #fcard-2 { width:120px; right:-5%; }
+  #fcard-3 { width:135px; left:0%; bottom:24%; }
+  .pp-inner { width: 200px; height: 260px; }
+  #proc-wrap { bottom:20%; }
+  #scroll-cue { display:none; }
+}
+@media (max-width: 480px) {
+  #hero { padding-bottom: 0; }
+  #hero-center { transform: translateY(-16vh); }
+  #perfect-portrait { bottom: 2%; }
+}
 </style>
+
+
+<script>
+// ── Text Scramble engine ────────────────────────────────────
+const CHARS = '!@#$%&|[]{}:,.<>?/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz€£¥§¶ΩΣΔΨΦαβγδ';
+
+class TextScramble {
+  el: HTMLElement; queue: any[]; frame: number; frameReq: number; resolve: (() => void) | null;
+  constructor(el: HTMLElement) { this.el=el; this.queue=[]; this.frame=0; this.frameReq=0; this.resolve=null; this.update=this.update.bind(this); }
+  setText(text: string): Promise<void> {
+    const old = this.el.textContent||''; const len = Math.max(old.length, text.length);
+    return new Promise<void>(res => {
+      this.resolve=res; this.queue=[];
+      for (let i=0;i<len;i++) {
+        this.queue.push({ from:old[i]||'', to:text[i]||'', start:Math.floor(Math.random()*14), end:Math.floor(Math.random()*14)+14, char:'' });
+      }
+      cancelAnimationFrame(this.frameReq); this.frame=0; this.update();
+    });
+  }
+  update() {
+    let out='', done=0;
+    for (let i=0;i<this.queue.length;i++) {
+      const q=this.queue[i];
+      if (this.frame>=q.end) { done++; out+=q.to; }
+      else if (this.frame>=q.start) {
+        if (!q.char||Math.random()<0.28) q.char=CHARS[Math.floor(Math.random()*CHARS.length)];
+        out+=`<span style="color:rgba(255,255,255,0.3)">${q.char}</span>`;
+      } else { out+=q.from; }
+    }
+    this.el.innerHTML=out;
+    if (done===this.queue.length) { if(this.resolve) this.resolve(); }
+    else { this.frame++; this.frameReq=requestAnimationFrame(this.update); }
+  }
+}
+
+// ── Main sequence ───────────────────────────────────────────
+const hero     = document.getElementById('hero')!;
+const procWrap = document.getElementById('proc-wrap')!;
+const gridSys  = document.getElementById('grid-system')!;
+const procPct  = document.getElementById('proc-pct')!;
+const procStep = document.getElementById('proc-step')!;
+const STEPS_TEXT = ["ANALYZING GEOMETRY", "RECALIBRATING LIGHT", "EDITORIAL GRADING", "FINALIZING ASSETS"];
+const STEPS_AT   = [20, 50, 80, 100];
+
+function sleep(ms:number) { return new Promise(r=>setTimeout(r,ms)); }
+
+function animateBar(ms:number) {
+  return new Promise<void>(res => {
+    let pct=0; const tick=100; const maxSteps=ms/tick;
+    const id=setInterval(()=>{
+      let step=(100/maxSteps) * (0.5+Math.random());
+      pct=Math.min(100,pct+step);
+      // Pad with zeros to always be 3 digits
+      procPct.textContent = Math.round(pct).toString().padStart(3, '0');
+
+      let stepIdx = 0;
+      for (let i = STEPS_AT.length - 1; i >= 0; i--) {
+        if (pct >= STEPS_AT[i]) { stepIdx = i; break; }
+      }
+      procStep.textContent = STEPS_TEXT[stepIdx];
+
+      if(pct>=100){clearInterval(id);res();}
+    },tick);
+  });
+}
+
+async function runScrambles() {
+  const targets = document.querySelectorAll<HTMLElement>('.scramble-target');
+  const promises = Array.from(targets).map((el,i) =>
+    sleep(i*60).then(() => new TextScramble(el).setText(el.dataset.final||''))
+  );
+  await Promise.all(promises);
+}
+
+async function run() {
+  await sleep(350);
+  procWrap.classList.add('active');
+  gridSys.classList.add('active'); // Start geometric scan
+  await Promise.all([ animateBar(2200), sleep(280).then(runScrambles) ]);
+  await sleep(180);
+  hero.classList.add('done');
+  gridSys.classList.remove('active'); // Stop grid scan
+  await sleep(900);
+  procWrap.style.transition='opacity 0.5s';
+  procWrap.style.opacity='0';
+}
+
+// ── Perfect Portrait & 3D Collapse Scroll Reveal ────────
+const perfectPortrait = document.getElementById('perfect-portrait');
+if (perfectPortrait) {
+  const scrollObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        // Trigger both the portrait reveal and the scattered cards collapse
+        perfectPortrait.classList.add('revealed');
+        hero.classList.add('hero-collapse');
+        scrollObserver.disconnect();
+      }
+    },
+    { threshold: 0.25 }
+  );
+  scrollObserver.observe(perfectPortrait);
+}
+
+if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', run);
+else run();
+</script>
