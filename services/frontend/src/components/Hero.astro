@@ -10,10 +10,12 @@
   <div id="glitch-b"></div>
   <div id="bad-vignette"></div>
 
-  <!-- ── Input Photos (Fumbled) ─────────────────────────────── -->
+  <!-- ── Input Photos (Fumbled) ───────────────────────────────
+       All three are crops/flips of the SAME portrait as the perfect
+       output below, so the many-bad-shots → one-profile story holds. -->
   <div class="fcard" id="fcard-1">
     <div class="fcard-inner">
-      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80" alt="Bad lighting" class="bad-photo" />
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop&q=45" alt="Bad lighting" class="bad-photo" />
       <div class="fcard-meta"><span class="fcard-label">B4D L!GHT!NG</span></div>
       <div class="corrupt-badge">LOW EXPOSURE</div>
     </div>
@@ -21,7 +23,7 @@
 
   <div class="fcard" id="fcard-2">
     <div class="fcard-inner">
-      <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80" alt="Blurry Selfie" class="bad-photo" />
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop&crop=focalpoint&fp-x=0.55&fp-y=0.3&fp-z=1.6&flip=h&q=45" alt="Blurry selfie" class="bad-photo" />
       <div class="fcard-meta"><span class="fcard-label">BLURRY</span></div>
       <div class="corrupt-badge">DISTORTED</div>
     </div>
@@ -29,7 +31,7 @@
 
   <div class="fcard" id="fcard-3">
     <div class="fcard-inner">
-      <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&q=80" alt="Side Angle" class="bad-photo" />
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop&crop=focalpoint&fp-x=0.8&fp-y=0.2&fp-z=1.8&q=45" alt="Awkward side angle" class="bad-photo" />
       <div class="fcard-meta"><span class="fcard-label">S!D€ 4NGL€</span></div>
       <div class="corrupt-badge">REJECTED</div>
     </div>
@@ -59,7 +61,7 @@
     <!-- ── Output: The Perfect 4K Portrait (revealed on scroll) ──────────── -->
     <div id="perfect-portrait">
       <div class="pp-inner">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1600&q=100" alt="Perfect 4K Portrait" class="pp-img" />
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1060&fit=crop&q=90" alt="Perfect 4K Portrait" class="pp-img" />
         <div class="pp-overlay"></div>
       </div>
       <div class="pp-meta">
@@ -114,10 +116,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* reserve room for navbar (top) and the clean-cards strip (bottom)
-     so the centered content can never collide with them */
-  padding-top: 80px;
-  padding-bottom: 300px;
+  /* room for the floating island navbar; portrait lives in flow below */
+  padding-top: 90px;
+  padding-bottom: 5rem;
 }
 
 /* ── Scan lines ─────────────────────────────────────────── */
@@ -326,45 +327,6 @@
   flex-wrap: wrap;
 }
 
-/* CTA — white fill / black text — STARK, editorial */
-#hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2.25rem;
-  background: rgba(255,255,255,0.05);
-  color: #fafafa;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 1px;
-  animation: btnGlitch 0.45s steps(1) infinite;
-  filter: blur(0.4px);
-  transition: background 0.5s ease 1.3s, color 0.5s ease 1.3s, border-color 0.5s ease 1.3s, box-shadow 0.5s ease 1.3s, filter 0.5s ease 1.3s;
-}
-@keyframes btnGlitch {
-  0%,82%,100% { transform:none; }
-  83% { transform:translateX(-3px); }
-  85% { transform:translateX(3px); }
-  87% { transform:none; }
-}
-#hero.done #hero-cta {
-  background: #fafafa;
-  color: #080808;
-  border-color: #fafafa;
-  box-shadow: 0 4px 24px rgba(250,250,250,0.12), 0 1px 4px rgba(0,0,0,0.8);
-  filter: none;
-  animation: none;
-}
-#hero.done #hero-cta:hover {
-  background: #080808;
-  color: #fafafa;
-  box-shadow: 0 0 0 1px #fafafa;
-}
-
 /* Secondary link */
 #hero-secondary {
   font-family: 'DM Sans', system-ui, sans-serif;
@@ -493,8 +455,9 @@
   flex-direction: column;
   align-items: center;
   z-index: 20;
-  pointer-events: none;
+  pointer-events: none; /* inert while hidden… */
 }
+#perfect-portrait.revealed { pointer-events: auto; } /* …hoverable once revealed */
 
 .pp-inner {
   width: 260px;
@@ -509,9 +472,14 @@
   transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1), filter 1s ease;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
-#perfect-portrait.revealed .pp-inner { opacity:1; transform:none; filter:none; }
-
-.pp-inner:hover {
+#perfect-portrait.revealed .pp-inner {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  /* reveal is done — make hover feedback snappy, not 1s */
+  transition: transform 0.35s ease, border-color 0.35s ease;
+}
+#perfect-portrait.revealed .pp-inner:hover {
   border-color: rgba(255,255,255,0.6);
   transform: translateY(-5px);
 }
@@ -597,30 +565,22 @@
    RESPONSIVE (HEIGHT & WIDTH)
 ════════════════════════════════════════════════════════ */
 @media (max-height: 850px) {
-  #hero { padding-bottom: 300px; }
   #hero-h1 { font-size: clamp(2.6rem, 8vw, 7rem); }
   .pp-inner { width: 220px; height: 290px; }
 }
 @media (max-height: 700px) {
-  #hero { padding-bottom: 280px; }
   .pp-inner { width: 190px; height: 250px; }
   #hero-h1 { margin-bottom: 0.25rem; }
   #hero-sub { margin-bottom: 1rem; }
 }
 
 @media (max-width: 768px) {
-  #hero { padding-bottom: 300px; }
   #fcard-1 { width:130px; left:-5%; }
   #fcard-2 { width:120px; right:-5%; }
   #fcard-3 { width:135px; left:0%; bottom:24%; }
   .pp-inner { width: 200px; height: 260px; }
   #proc-wrap { bottom:20%; }
   #scroll-cue { display:none; }
-}
-@media (max-width: 480px) {
-  #hero { padding-bottom: 0; }
-  #hero-center { transform: translateY(-16vh); }
-  #perfect-portrait { bottom: 2%; }
 }
 </style>
 
@@ -697,6 +657,24 @@ async function runScrambles() {
   await Promise.all(promises);
 }
 
+// ── Perfect Portrait & 3D Collapse — genuinely scroll-driven ────────
+// The portrait is inside the initially-visible hero, so an
+// IntersectionObserver fires at load. Instead: reveal only once the
+// intro has finished AND the user has actually scrolled down.
+const perfectPortrait = document.getElementById('perfect-portrait');
+let introDone = false;
+let revealed = false;
+
+function tryReveal() {
+  if (revealed || !introDone || !perfectPortrait) return;
+  if (window.scrollY < window.innerHeight * 0.12) return;
+  revealed = true;
+  perfectPortrait.classList.add('revealed');
+  hero.classList.add('hero-collapse');
+  window.removeEventListener('scroll', tryReveal);
+}
+window.addEventListener('scroll', tryReveal, { passive: true });
+
 async function run() {
   await sleep(350);
   procWrap.classList.add('active');
@@ -705,26 +683,11 @@ async function run() {
   await sleep(180);
   hero.classList.add('done');
   gridSys.classList.remove('active'); // Stop grid scan
+  introDone = true;
+  tryReveal(); // user may have scrolled during the intro
   await sleep(900);
   procWrap.style.transition='opacity 0.5s';
   procWrap.style.opacity='0';
-}
-
-// ── Perfect Portrait & 3D Collapse Scroll Reveal ────────
-const perfectPortrait = document.getElementById('perfect-portrait');
-if (perfectPortrait) {
-  const scrollObserver = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        // Trigger both the portrait reveal and the scattered cards collapse
-        perfectPortrait.classList.add('revealed');
-        hero.classList.add('hero-collapse');
-        scrollObserver.disconnect();
-      }
-    },
-    { threshold: 0.25 }
-  );
-  scrollObserver.observe(perfectPortrait);
 }
 
 if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', run);
