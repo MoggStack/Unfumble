@@ -6,4 +6,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: 'https://unfumble.app',
+  trailingSlash: 'always',
 });
