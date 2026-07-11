@@ -6,9 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_db
 from app.models.job import CreateJobRequest, JobResponse, JobStatus
 from app.models.orm import JobRecord
-from app.services.image_editor import edit_image
-from app.services.prompt import build_prompt
-from app.services.storage import presigned_url, upload_bytes
+from app.services.storage import presigned_url
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
@@ -27,22 +25,16 @@ def _to_response(record: JobRecord) -> JobResponse:
 async def create_job(payload: CreateJobRequest, db: AsyncSession = Depends(get_db)) -> JobResponse:
     job_id = str(uuid.uuid4())
 
-    # Synchronous for now — a later step swaps this for a Celery task so the
-    # request returns PENDING immediately instead of blocking on the AI call.
-    prompt = build_prompt(payload.use_case)
-    image_bytes = edit_image(payload.photo_url, prompt)
-
-    result_key = f"{job_id}.jpg"
-    upload_bytes(result_key, image_bytes)
-
     record = JobRecord(
         job_id=job_id,
         use_case=payload.use_case.value,
-        status=JobStatus.done.value,
-        result_key=result_key,
+        status=JobStatus.pending.value,
     )
     db.add(record)
     await db.commit()
+
+    from app.workers.tasks import process_image_job
+    process_image_job.delay(job_id, payload.photo_url, payload.use_case.value)
 
     return _to_response(record)
 

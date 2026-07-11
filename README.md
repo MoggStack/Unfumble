@@ -20,12 +20,12 @@ Built as a learning project by two developers exploring AI from two different ec
 ```
 React Frontend
       │
-      ▼
-Java Spring Boot Gateway  (:8080)
+ 
   - Auth & user management
   - Upload validation
   - Job tracking (PENDING → PROCESSING → DONE)
-  - Multi-photo ranking (Spring AI + vision model)
+  - Multi-photo ranking (     ▼
+Java Spring Boot Gateway  (:8080)Spring AI + vision model)
   - Calls the Python AI Engine
       │
       ▼
