@@ -16,3 +16,13 @@ class Base(DeclarativeBase):
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         yield session
+
+async def update_job(job_id: str, status: str, result_key: str | None = None) -> None:
+    from app.models.orm import JobRecord
+    async with async_session() as session:
+        record = await session.get(JobRecord, job_id)
+        if record:
+            record.status = status
+            if result_key:
+                record.result_key = result_key
+            await session.commit()
