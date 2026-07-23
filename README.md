@@ -88,18 +88,31 @@ headshot/
 - Python 3.12 + [uv](https://docs.astral.sh/uv/)
 - Node.js (for the frontend, once it's built out)
 
-### 1. Clone and start infrastructure
+### 1. Quick Start (All-in-One Command)
+
+We have a script that spins up the infrastructure, Python AI Engine, and Java Gateway all at once in the background.
 
 ```bash
 git clone https://github.com/HeadshotAI/headshot.git
 cd headshot
-cd infra && docker compose up -d && cd ..
+./start.sh
 ```
 
-This starts Postgres (`:5432`), Redis (`:6379`), and MinIO (`:9000`, console at `:9001`).
+*(Press `Ctrl+C` to gracefully shut down all services at once).*
 
-### 2. Run the AI Engine (Python)
+---
 
+### 2. Manual Start (Alternative)
+
+If you prefer to start them individually:
+
+**A. Start Infrastructure**
+```bash
+cd infra && docker compose up -d && cd ..
+```
+*(Starts Postgres at `:5432`, Redis at `:6379`, and MinIO at `:9000`)*
+
+**B. Run the AI Engine (Python)**
 ```bash
 cd services/ai-engine
 cp .env.example .env
@@ -108,21 +121,14 @@ uv pip install -e .
 uvicorn app.main:app --reload --port 8001
 ```
 
-Check it's alive: `curl http://localhost:8001/api/v1/health`
-
-### 3. Run the Gateway (Java)
-
+**C. Run the Gateway (Java)**
 ```bash
 cd services/gateway
 ./mvnw spring-boot:run
 ```
 
-Check it's alive: `curl http://localhost:8080/health`
-
-### 4. Create the MinIO bucket
-
+**D. Create the MinIO bucket**
 Open `http://localhost:9001` (login: `minioadmin` / `minioadmin`) and create a bucket named `headshot-images`, or via CLI:
-
 ```bash
 docker run --rm --network host minio/mc \
   alias set local http://localhost:9000 minioadmin minioadmin && \
@@ -164,16 +170,29 @@ No direct pushes to `main`.
 
 ---
 
-## Roadmap
+## Roadmap & Responsibilities
 
-- [ ] Auth (signup/login)
-- [ ] Photo upload + multi-photo ranking
-- [ ] Use-case selection (passport, LinkedIn, Instagram, job application)
-- [ ] Image-editing AI integration
-- [ ] Async job processing with Celery
-- [ ] Job status polling
-- [ ] React frontend
-- [ ] Deployment
+To make it perfectly clear who is building what, here is the detailed breakdown of our current roadmap:
+
+### ☕ Java Responsibilities (`services/gateway/`)
+*The "Orchestrator" and "Front Door" of the application.*
+- [ ] **Auth (Signup/Login):** Implement Spring Security with JWT/sessions.
+- [ ] **Photo Upload API:** Endpoints to receive uploads and save to MinIO.
+- [ ] **Multi-Photo Ranking:** Use Spring AI to analyze multiple uploaded photos and pick the best one for the chosen use-case before sending it to Python.
+- [ ] **Job Tracking:** Create JPA entities to track job state (`PENDING`, `PROCESSING`, `DONE`).
+- [ ] **AI Engine Client:** HTTP client to trigger the Python AI engine and an endpoint to receive callbacks when jobs are complete.
+
+### 🐍 Python Responsibilities (`services/ai-engine/`)
+*The "AI Brain" handling heavy image processing.*
+- [ ] **Async Task Setup:** Configure Celery with Redis so AI generation happens asynchronously without blocking HTTP requests.
+- [ ] **Prompt Engineering:** Logic to convert the requested "use-case" (e.g., LinkedIn vs Instagram) into a highly specific AI prompt.
+- [ ] **Image-Editing AI Integration:** Call the actual third-party image generation model (via API) with the image and prompt.
+- [ ] **Save & Callback:** Save the generated image back to MinIO and ping the Java Gateway to notify it that the job is `DONE`.
+
+### 🤝 Shared/Other Responsibilities
+- [ ] **API Contracts:** Define exact JSON structures in `docs/contracts/` for how Java and Python communicate.
+- [ ] **React Frontend:** Build the UI for upload, use-case selection, and job status polling.
+- [ ] **Deployment:** Setup production infrastructure.
 
 ---
 
