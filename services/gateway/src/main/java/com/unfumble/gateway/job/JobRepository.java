@@ -1,4 +1,4 @@
-package com.headshot.gateway.job;
+package com.unfumble.gateway.job;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

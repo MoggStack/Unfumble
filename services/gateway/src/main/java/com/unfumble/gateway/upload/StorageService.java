@@ -1,4 +1,4 @@
-package com.headshot.gateway.upload;
+package com.unfumble.gateway.upload;
 
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;

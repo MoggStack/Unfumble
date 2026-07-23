@@ -141,7 +141,7 @@ docker run --rm --network host minio/mc \
 
 Each service has its own `.env.example` — copy it to `.env` and fill in:
 
-- `OPENAI_API_KEY` / image-model API key — needed for AI ranking and image editing
+- `GEMINI_API_KEY` (free from Google AI Studio) — needed for AI photo ranking and image processing
 - Database, Redis, and MinIO credentials default to the local Docker Compose values
 
 Never commit `.env` files — only `.env.example`.

@@ -1,4 +1,4 @@
-package com.headshot.gateway.user;
+package com.unfumble.gateway.user;
 
 import jakarta.persistence.*;
 import java.time.Instant;

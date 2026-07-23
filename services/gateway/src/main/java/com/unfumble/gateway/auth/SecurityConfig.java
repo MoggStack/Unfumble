@@ -1,6 +1,6 @@
-package com.headshot.gateway.auth;
+package com.unfumble.gateway.auth;
 
-import com.headshot.gateway.user.UserService;
+import com.unfumble.gateway.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

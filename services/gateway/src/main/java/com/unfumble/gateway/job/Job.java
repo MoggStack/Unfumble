@@ -1,4 +1,4 @@
-package com.headshot.gateway.job;
+package com.unfumble.gateway.job;
 
 import jakarta.persistence.*;
 import java.time.Instant;

@@ -1,7 +1,7 @@
-package com.headshot.gateway.upload;
+package com.unfumble.gateway.upload;
 
-import com.headshot.gateway.job.Job;
-import com.headshot.gateway.job.JobService;
+import com.unfumble.gateway.job.Job;
+import com.unfumble.gateway.job.JobService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

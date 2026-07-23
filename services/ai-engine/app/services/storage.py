@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 import boto3
+from botocore.exceptions import ClientError
 
 from app.core.config import get_settings
 
@@ -38,5 +39,8 @@ def ensure_bucket() -> None:
     client = _client()
     try:
         client.head_bucket(Bucket=bucket)
-    except client.exceptions.NoSuchBucket:
-        client.create_bucket(Bucket=bucket)
+    except (client.exceptions.NoSuchBucket, ClientError):
+        try:
+            client.create_bucket(Bucket=bucket)
+        except ClientError:
+            pass
