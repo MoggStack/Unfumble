@@ -1,4 +1,4 @@
-package com.headshot.gateway.ai;
+package com.unfumble.gateway.ai;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

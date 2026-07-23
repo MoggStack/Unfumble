@@ -1,6 +1,6 @@
-package com.headshot.gateway.ai;
+package com.unfumble.gateway.ai;
 
-import com.headshot.gateway.job.Job;
+import com.unfumble.gateway.job.Job;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,4 +1,4 @@
-package com.headshot.gateway.user;
+package com.unfumble.gateway.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

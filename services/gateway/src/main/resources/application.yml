@@ -6,9 +6,9 @@ spring:
     name: unfumble-gateway
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:headshot}
-    username: ${DB_USER:headshot}
-    password: ${DB_PASSWORD:headshot123}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:unfumble}
+    username: ${DB_USER:unfumble}
+    password: ${DB_PASSWORD:unfumble123}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -22,11 +22,12 @@ spring:
 
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY:PLACEHOLDER}
-      # Vision model used for multi-photo ranking
+      # Google Gemini free tier via OpenAI-compatible endpoint
+      api-key: ${GEMINI_API_KEY:${OPENAI_API_KEY:PLACEHOLDER}}
+      base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com/v1beta/openai/}
       chat:
         options:
-          model: gpt-4o
+          model: ${GEMINI_MODEL:gemini-2.5-flash}
 
 # ── Application-level properties ─────────────────────────────────────────────
 
@@ -38,11 +39,11 @@ app:
     endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:minioadmin}
     secret-key: ${MINIO_SECRET_KEY:minioadmin}
-    bucket: ${MINIO_BUCKET:headshot-images}
+    bucket: ${MINIO_BUCKET:unfumble-images}
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 
 logging:
   level:
-    com.headshot.gateway: DEBUG
+    com.unfumble.gateway: DEBUG
     org.springframework.security: INFO

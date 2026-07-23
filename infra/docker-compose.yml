@@ -3,11 +3,11 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: headshot
-      POSTGRES_USER: headshot
-      POSTGRES_PASSWORD: headshot123
+      POSTGRES_DB: unfumble
+      POSTGRES_USER: unfumble
+      POSTGRES_PASSWORD: unfumble123
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

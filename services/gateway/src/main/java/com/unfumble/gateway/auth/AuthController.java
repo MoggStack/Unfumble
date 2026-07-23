@@ -1,7 +1,7 @@
-package com.headshot.gateway.auth;
+package com.unfumble.gateway.auth;
 
-import com.headshot.gateway.user.User;
-import com.headshot.gateway.user.UserService;
+import com.unfumble.gateway.user.User;
+import com.unfumble.gateway.user.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

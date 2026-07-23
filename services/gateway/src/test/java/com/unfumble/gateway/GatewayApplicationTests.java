@@ -1,4 +1,4 @@
-package com.headshot.gateway;
+package com.unfumble.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

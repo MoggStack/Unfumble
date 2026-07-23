@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     s3_access_key: str
     s3_secret_key: str
     s3_bucket: str
+    gemini_api_key: str = ""
     openai_api_key: str = ""
     replicate_api_token: str = ""
 

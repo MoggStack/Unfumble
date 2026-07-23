@@ -1,4 +1,4 @@
-package com.headshot.gateway;
+package com.unfumble.gateway;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
