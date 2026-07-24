@@ -93,8 +93,8 @@ headshot/
 We have a script that spins up the infrastructure, Python AI Engine, and Java Gateway all at once in the background.
 
 ```bash
-git clone https://github.com/HeadshotAI/headshot.git
-cd headshot
+git clone https://github.com/MoggStack/Unfumble.git
+cd Unfumble
 ./start.sh
 ```
 
@@ -128,11 +128,11 @@ cd services/gateway
 ```
 
 **D. Create the MinIO bucket**
-Open `http://localhost:9001` (login: `minioadmin` / `minioadmin`) and create a bucket named `headshot-images`, or via CLI:
+Open `http://localhost:9001` (login: `minioadmin` / `minioadmin`) and create a bucket named `unfumble-images`, or via CLI:
 ```bash
-docker run --rm --network host minio/mc \
-  alias set local http://localhost:9000 minioadmin minioadmin && \
-  mc mb local/headshot-images
+docker run --rm --network infra_default minio/mc \
+  alias set local http://minio:9000 minioadmin minioadmin && \
+  mc mb local/unfumble-images
 ```
 
 ---
@@ -176,10 +176,10 @@ To make it perfectly clear who is building what, here is the detailed breakdown 
 
 ### ☕ Java Responsibilities (`services/gateway/`)
 *The "Orchestrator" and "Front Door" of the application.*
-- [ ] **Auth (Signup/Login):** Implement Spring Security with JWT/sessions.
-- [ ] **Photo Upload API:** Endpoints to receive uploads and save to MinIO.
-- [ ] **Multi-Photo Ranking:** Use Spring AI to analyze multiple uploaded photos and pick the best one for the chosen use-case before sending it to Python.
-- [ ] **Job Tracking:** Create JPA entities to track job state (`PENDING`, `PROCESSING`, `DONE`).
+- [x] **Auth (Signup/Login):** Implement Spring Security with JWT/sessions.
+- [x] **Photo Upload API:** Endpoints to receive uploads and save to MinIO.
+- [x] **Multi-Photo Ranking:** Use Spring AI to analyze multiple uploaded photos and pick the best one for the chosen use-case before sending it to Python.
+- [x] **Job Tracking:** Create JPA entities to track job state (`PENDING`, `PROCESSING`, `DONE`).
 - [ ] **AI Engine Client:** HTTP client to trigger the Python AI engine and an endpoint to receive callbacks when jobs are complete.
 
 ### 🐍 Python Responsibilities (`services/ai-engine/`)
