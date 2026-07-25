@@ -20,6 +20,7 @@ class JobStatus(str, Enum):
 class CreateJobRequest(BaseModel):
     photo_url: str
     use_case: UseCase
+    metadata: dict[str, str] | None = None
 
 
 class JobResponse(BaseModel):
