@@ -34,7 +34,7 @@ async def create_job(payload: CreateJobRequest, db: AsyncSession = Depends(get_d
     await db.commit()
 
     from app.workers.tasks import process_image_job
-    process_image_job.delay(job_id, payload.photo_url, payload.use_case.value)
+    process_image_job.delay(job_id, payload.photo_url, payload.use_case.value, payload.metadata)
 
     return _to_response(record)
 
