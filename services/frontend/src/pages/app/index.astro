@@ -1,5 +1,5 @@
 ---
-// /app route — placeholder only
+// /app — UnFumble core app: upload + use-case → AI result
 ---
 
 <!DOCTYPE html>
@@ -7,67 +7,409 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UnFumble App — Coming Soon</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <title>UnFumble — Transform Your Photo</title>
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
+
       body {
         min-height: 100vh;
-        background: #050a0e;
+        background: #0a0f14;
         color: #e2e8f0;
-        font-family: 'Inter', sans-serif;
+        font-family: system-ui, sans-serif;
+        padding: 2rem 1rem;
+      }
+
+      header {
         display: flex;
         align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 2rem;
+        gap: 1rem;
+        margin-bottom: 2rem;
       }
-      .badge {
-        display: inline-block;
-        padding: 0.4rem 1rem;
-        border-radius: 9999px;
+
+      header a { color: #5eead4; text-decoration: none; font-size: 0.9rem; }
+      header h1 { font-size: 1.4rem; font-weight: 700; }
+
+      .container { max-width: 900px; margin: 0 auto; }
+
+      /* ── UPLOAD ZONE ── */
+      .upload-zone {
+        border: 2px dashed #334155;
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s, background 0.2s;
+        position: relative;
+        background: #111827;
+      }
+      .upload-zone:hover, .upload-zone.drag-over {
+        border-color: #14b8a6;
+        background: rgba(20,184,166,0.05);
+      }
+      .upload-zone input[type="file"] {
+        position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+      }
+      .upload-zone .icon { font-size: 3rem; margin-bottom: 0.75rem; }
+      .upload-zone p { color: #64748b; font-size: 0.95rem; }
+      .upload-zone strong { color: #94a3b8; }
+
+      /* ── PREVIEW ── */
+      #preview-section { display: none; margin-top: 1.5rem; }
+      .preview-img {
+        width: 100%;
+        max-height: 320px;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 1px solid #1e293b;
+        background: #111827;
+      }
+
+      /* ── USE-CASE SELECTOR ── */
+      .use-case-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
+      .use-case-btn {
+        padding: 1rem;
+        border-radius: 10px;
+        border: 2px solid #1e293b;
+        background: #111827;
+        color: #94a3b8;
+        cursor: pointer;
+        text-align: center;
+        font-size: 0.9rem;
+        transition: all 0.15s;
+      }
+      .use-case-btn:hover { border-color: #334155; color: #e2e8f0; }
+      .use-case-btn.selected {
+        border-color: #14b8a6;
         background: rgba(20,184,166,0.1);
-        border: 1px solid rgba(20,184,166,0.3);
         color: #5eead4;
+      }
+      .use-case-btn .emoji { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+      .use-case-btn .label { font-weight: 600; display: block; }
+      .use-case-btn .desc { font-size: 0.78rem; color: #475569; margin-top: 0.25rem; }
+
+      /* ── SUBMIT ── */
+      #submit-btn {
+        display: none;
+        margin-top: 1.5rem;
+        width: 100%;
+        padding: 0.9rem;
+        border-radius: 10px;
+        border: none;
+        background: #14b8a6;
+        color: #0a0f14;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s, opacity 0.2s;
+      }
+      #submit-btn:hover { background: #0d9488; }
+      #submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+      /* ── STATUS ── */
+      #status-section { display: none; margin-top: 1.5rem; }
+      .status-box {
+        padding: 1rem 1.25rem;
+        border-radius: 10px;
+        border: 1px solid #1e293b;
+        background: #111827;
+        font-size: 0.9rem;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .status-box.error { border-color: #ef4444; color: #fca5a5; background: rgba(239,68,68,0.05); }
+      .status-box.success { border-color: #22c55e; color: #86efac; background: rgba(34,197,94,0.05); }
+
+      .spinner {
+        width: 18px; height: 18px;
+        border: 2px solid #334155;
+        border-top-color: #14b8a6;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ── RESULT ── */
+      #result-section { display: none; margin-top: 2rem; }
+      .result-label {
         font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 1.5rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
       }
-      h1 {
-        font-size: clamp(2rem, 6vw, 4rem);
-        font-weight: 800;
-        background: linear-gradient(135deg, #14b8a6, #818cf8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 1rem;
+      .result-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
       }
-      p { color: #64748b; max-width: 30ch; margin: 0 auto 2rem; line-height: 1.6; }
-      a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
+      @media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
+      .result-img {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #1e293b;
+        background: #111827;
+        object-fit: contain;
+        max-height: 400px;
+      }
+      .result-col .result-label { margin-bottom: 0.5rem; }
+
+      #download-btn {
+        display: inline-block;
+        margin-top: 1.25rem;
         padding: 0.75rem 1.5rem;
-        border-radius: 0.75rem;
-        background: rgba(20,184,166,0.1);
-        border: 1px solid rgba(20,184,166,0.3);
+        border-radius: 10px;
+        border: 1px solid #14b8a6;
+        background: transparent;
         color: #5eead4;
         font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
         text-decoration: none;
+        transition: background 0.2s;
+      }
+      #download-btn:hover { background: rgba(20,184,166,0.1); }
+
+      #reset-btn {
+        display: inline-block;
+        margin-top: 1.25rem;
+        margin-left: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #334155;
+        background: transparent;
+        color: #64748b;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
         transition: all 0.2s;
       }
-      a:hover { background: rgba(20,184,166,0.2); }
+      #reset-btn:hover { border-color: #475569; color: #94a3b8; }
     </style>
   </head>
   <body>
-    <div>
-      <div class="badge">🚧 In progress</div>
-      <h1>App coming soon</h1>
-      <p>The UnFumble AI engine is being wired up. Check back soon.</p>
-      <a href="/">← Back to landing page</a>
+    <div class="container">
+      <header>
+        <a href="/">← Back</a>
+        <h1>UnFumble</h1>
+      </header>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="drop-zone">
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" />
+        <div class="icon">📷</div>
+        <strong>Click to upload or drag & drop</strong>
+        <p>JPEG, PNG or WebP — max 10 MB</p>
+      </div>
+
+      <!-- Preview of uploaded image -->
+      <div id="preview-section">
+        <img id="preview-img" class="preview-img" src="" alt="Preview" />
+
+        <!-- Use-case selector -->
+        <div class="use-case-grid" id="use-case-grid">
+          <button class="use-case-btn" data-value="passport">
+            <span class="emoji">🛂</span>
+            <span class="label">Passport</span>
+            <span class="desc">White background, neutral crop</span>
+          </button>
+          <button class="use-case-btn" data-value="linkedin">
+            <span class="emoji">💼</span>
+            <span class="label">LinkedIn</span>
+            <span class="desc">Professional office look</span>
+          </button>
+          <button class="use-case-btn" data-value="instagram">
+            <span class="emoji">📸</span>
+            <span class="label">Instagram</span>
+            <span class="desc">Vibrant, well-lit portrait</span>
+          </button>
+          <button class="use-case-btn" data-value="job_application">
+            <span class="emoji">📋</span>
+            <span class="label">Job Application</span>
+            <span class="desc">Formal, studio-lit photo</span>
+          </button>
+        </div>
+
+        <button id="submit-btn">✨ Transform My Photo</button>
+      </div>
+
+      <!-- Status messages -->
+      <div id="status-section">
+        <div class="status-box" id="status-box">
+          <div class="spinner" id="status-spinner"></div>
+          <span id="status-text">Processing…</span>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="result-section">
+        <div class="result-grid">
+          <div class="result-col">
+            <div class="result-label">Before</div>
+            <img id="result-before" class="result-img" src="" alt="Original" />
+          </div>
+          <div class="result-col">
+            <div class="result-label">After</div>
+            <img id="result-after" class="result-img" src="" alt="Result" />
+          </div>
+        </div>
+        <a id="download-btn" href="#" download="unfumble-result.jpg">⬇ Download Result</a>
+        <button id="reset-btn">↩ Start over</button>
+      </div>
     </div>
+
+    <script is:inline>
+      const AI_ENGINE_URL = 'http://localhost:8001/api/v1/process';
+
+      // ── State ──
+      let selectedFile = null;
+      let selectedUseCase = null;
+      let originalDataUrl = null;
+
+      // ── Element refs ──
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('file-input');
+      const previewSection = document.getElementById('preview-section');
+      const previewImg = document.getElementById('preview-img');
+      const useCaseBtns = document.querySelectorAll('.use-case-btn');
+      const submitBtn = document.getElementById('submit-btn');
+      const statusSection = document.getElementById('status-section');
+      const statusBox = document.getElementById('status-box');
+      const statusSpinner = document.getElementById('status-spinner');
+      const statusText = document.getElementById('status-text');
+      const resultSection = document.getElementById('result-section');
+      const resultBefore = document.getElementById('result-before');
+      const resultAfter = document.getElementById('result-after');
+      const downloadBtn = document.getElementById('download-btn');
+      const resetBtn = document.getElementById('reset-btn');
+
+      // ── File selection ──
+      fileInput.addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if (f) handleFile(f);
+      });
+
+      // ── Drag & drop ──
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+      });
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const f = e.dataTransfer.files[0];
+        if (f && f.type.startsWith('image/')) handleFile(f);
+      });
+
+      function handleFile(file) {
+        if (file.size > 10 * 1024 * 1024) {
+          alert('File is too large. Please upload an image under 10 MB.');
+          return;
+        }
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          originalDataUrl = e.target.result;
+          previewImg.src = originalDataUrl;
+          previewSection.style.display = 'block';
+          // reset selection
+          selectedUseCase = null;
+          useCaseBtns.forEach(b => b.classList.remove('selected'));
+          submitBtn.style.display = 'none';
+          hideStatus();
+          resultSection.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // ── Use-case selection ──
+      useCaseBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          useCaseBtns.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedUseCase = btn.dataset.value;
+          submitBtn.style.display = selectedFile ? 'block' : 'none';
+        });
+      });
+
+      // ── Submit ──
+      submitBtn.addEventListener('click', async () => {
+        if (!selectedFile || !selectedUseCase) return;
+        await runProcess();
+      });
+
+      async function runProcess() {
+        submitBtn.disabled = true;
+        resultSection.style.display = 'none';
+        showStatus('loading', 'Sending to AI engine…');
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('use_case', selectedUseCase);
+
+        try {
+          showStatus('loading', 'Calling Gemini — this may take 15–30 seconds…');
+
+          const resp = await fetch(AI_ENGINE_URL, {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({ detail: resp.statusText }));
+            throw new Error(errData.detail || `HTTP ${resp.status}`);
+          }
+
+          const data = await resp.json();
+          // data = { job_id, result_url, use_case }
+
+          showStatus('success', '✅ Done! Your photo has been transformed.');
+
+          // Show result
+          resultBefore.src = originalDataUrl;
+          resultAfter.src = data.result_url;
+          downloadBtn.href = data.result_url;
+          resultSection.style.display = 'block';
+
+        } catch (err) {
+          showStatus('error', `❌ Error: ${err.message}`);
+        } finally {
+          submitBtn.disabled = false;
+        }
+      }
+
+      // ── Status helpers ──
+      function showStatus(type, message) {
+        statusSection.style.display = 'block';
+        statusBox.className = 'status-box' + (type === 'error' ? ' error' : type === 'success' ? ' success' : '');
+        statusSpinner.style.display = type === 'loading' ? 'block' : 'none';
+        statusText.textContent = message;
+      }
+
+      function hideStatus() {
+        statusSection.style.display = 'none';
+      }
+
+      // ── Reset ──
+      resetBtn.addEventListener('click', () => {
+        selectedFile = null;
+        selectedUseCase = null;
+        originalDataUrl = null;
+        fileInput.value = '';
+        previewSection.style.display = 'none';
+        submitBtn.style.display = 'none';
+        hideStatus();
+        resultSection.style.display = 'none';
+      });
+    </script>
   </body>
 </html>

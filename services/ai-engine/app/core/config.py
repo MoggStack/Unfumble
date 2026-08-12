@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     openai_api_key: str = ""
     replicate_api_token: str = ""
+    huggingface_api_key: str = ""
 
 
 @lru_cache
